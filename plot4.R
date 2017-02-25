@@ -12,18 +12,26 @@ begin_time <- strptime("01/02/2007 00:00:00",format="%d/%m/%Y %H:%M:%S")
 twodays <- subset(alldata,datetime >= begin_time & datetime < end_time)
 
 # open plot device
-png(filename="plot3.png",width=480,height=480)
+png(filename="plot4.png",width=480,height=480)
 
-# plot empty plot - note that sub metering 1 has largest y range...
+# set up for multiplot
+par(mfcol=c(2,2))
+
+# make the line plot
+with (twodays,plot(datetime,Global_active_power,type="l",xlab="",ylab="Global Active Power (kilowatts)"))
+
+# make the plot of sub_metering
 plot(twodays$datetime,twodays$Sub_metering_1,type="n",xlab="",ylab="Energy/ sub metering")
-
-# add the lines
 points(twodays$datetime,twodays$Sub_metering_1,col="black",type="l")
 points(twodays$datetime,twodays$Sub_metering_2,col="red",type="l")
 points(twodays$datetime,twodays$Sub_metering_3,col="blue",type="l")
-
-# add the legend
 legend("topright",col=c("black","red","blue"),legend=c("Sub_metering_1","Sub_metering_2","Sub_metering_3"),lty=c(1,1,1))
+
+# make the plot of voltage
+with(twodays,plot(datetime,Voltage,type="l"))
+
+# make the plot of reactive power
+with(twodays,plot(datetime,Global_reactive_power,type="l"))
 
 # close the plot device, creating the .png file
 dev.off()
